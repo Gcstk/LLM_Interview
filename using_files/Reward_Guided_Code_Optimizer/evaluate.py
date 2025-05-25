@@ -43,8 +43,8 @@ def evaluate_code(code: str, test_cases: list, verbose: bool = False) -> float:
             break
     if not func_name:
         if verbose:
-            print("未找到函数定义: -5")
-        return -5.0  # 无函数定义时惩罚
+            print("未找到函数定义: -6")
+        return -6.0  # 无函数定义时惩罚
 
     # 1. 正确性和容错性
     correctness_score = evaluate_correctness(code, func_name, test_cases)

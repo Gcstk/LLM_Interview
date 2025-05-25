@@ -16,22 +16,16 @@ if __name__ == "__main__":
     random.seed(42)
     np.random.seed(42)
 
-    initial_code = """
-def sum_list(numbers):
-    result = 0
-    for num in numbers:
-        result += num
-    return result
-"""
-    test_cases = [([1, 2, 3], 6), ([0, 0], 0), ([-1, 1], 0)]
-    env = make_vec_env(lambda: CodeOptimizationEnv(initial_code, test_cases), n_envs=1)
+    # 使用 function_corpus.json 文件
+    function_corpus_file = "function_corpus.json"
+    env = make_vec_env(lambda: CodeOptimizationEnv(function_corpus_file), n_envs=1)
     env.seed(42)
 
     # 初始化并训练代理
     agent = CodeOptimizationAgent(env)
     best_reward = float("-inf")
 
-    # 分段训练并保存最佳模型
+    # 训练循环
     for _ in range(10000 // 2048):
         agent.train(total_timesteps=2048)
         obs = env.reset()
@@ -47,17 +41,20 @@ def sum_list(numbers):
             agent.model.save("ppo_code_optimizer")
             print(f"Saved model with total reward: {total_reward}")
 
-    # 测试最终模型
-    env = CodeOptimizationEnv(initial_code, test_cases)
-    obs = env.reset()
-    print("Final Optimization Steps:")
-    for i in range(10):
-        action = agent.predict(obs)
-        obs, reward, done, _ = env.step(action)
-        print(f"Step {i+1}:")
-        print(f"Code:\n{env.current_code}")
-        print(f"Reward: {reward}")
-        print("-" * 50)
-        if done:
-            print("Optimization stopped.")
-            break
+    # 测试所有函数的优化结果
+    env = CodeOptimizationEnv(function_corpus_file)
+    for func_idx in range(len(env.function_corpus)):
+        env.current_func_idx = func_idx
+        obs = env.reset()
+        print(f"\nOptimizing function {func_idx + 1}:")
+        print(f"Initial Code:\n{env.current_code}")
+        for i in range(10):
+            action = agent.predict(obs)
+            obs, reward, done, _ = env.step(action)
+            print(f"Step {i+1}:")
+            print(f"Code:\n{env.current_code}")
+            print(f"Reward: {reward}")
+            print("-" * 50)
+            if done:
+                print("Optimization stopped.")
+                break
