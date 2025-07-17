@@ -3,18 +3,24 @@
     - [gradient\_accumulation\_steps 梯度累计步数解释一下](#gradient_accumulation_steps-梯度累计步数解释一下)
     - [Qwen/DeepSeek/LLaMA/GPT的架构对比](#qwendeepseekllamagpt的架构对比)
     - [注意力机制解释](#注意力机制解释)
+    - [强化学习 PPO 的代码优化器讲一下](#强化学习-ppo-的代码优化器讲一下)
+    - [PPO再结合一下R1的这个GRPO,你可以讲一下它们](#ppo再结合一下r1的这个grpo你可以讲一下它们)
     - [强化学习 PPO 与 GRPO 算法介绍,有哪些指标之类的?](#强化学习-ppo-与-grpo-算法介绍有哪些指标之类的)
-    - [COT阶段是怎么训练的?](#cot阶段是怎么训练的)
+    - [贝尔曼公式 强化学习策略评估 方法](#贝尔曼公式-强化学习策略评估-方法)
+    - [CoT (Chain-of-Thought) 推理策略 是怎么训练获得的?](#cot-chain-of-thought-推理策略-是怎么训练获得的)
+    - [继续训练有哪些主要的阶段?每个阶段是的作用是什么?并且是怎么样训练的?](#继续训练有哪些主要的阶段每个阶段是的作用是什么并且是怎么样训练的)
     - [ROPE现在是怎么做的,详细解释一下.有哪些优化的方法?](#rope现在是怎么做的详细解释一下有哪些优化的方法)
     - [怎么加速推理,推理优化具体有什么心得,从模型架构和部署之后分别讲一下](#怎么加速推理推理优化具体有什么心得从模型架构和部署之后分别讲一下)
     - [解释一下蒸馏,怎么做?](#解释一下蒸馏怎么做)
     - [多模态训练怎么做,多模态原理](#多模态训练怎么做多模态原理)
     - [系统的学过那个机器学习的一些东西吗?有哪些?](#系统的学过那个机器学习的一些东西吗有哪些)
     - [如何减少过拟合,怎么判断](#如何减少过拟合怎么判断)
+    - [全量微调怎么做?](#全量微调怎么做)
     - [cv常用算法](#cv常用算法)
     - [svm,xgboost,lstm,cnn,rnn,k-means,random forest,knn,gnn,pca](#svmxgboostlstmcnnrnnk-meansrandom-forestknngnnpca)
     - [f1,rmse/mse/mae r-squared,adjust r-squared,F statistics](#f1rmsemsemae-r-squaredadjust-r-squaredf-statistics)
     - [kv cache通俗讲解](#kv-cache通俗讲解)
+    - [Automatic Prefix Caching解释,怎么实现的](#automatic-prefix-caching解释怎么实现的)
     - [MOE架构介绍](#moe架构介绍)
 - [垂域模型相关](#垂域模型相关)
     - [介绍一下这个项目,这个项目有多少人参加,你是什么角色?背景是什么?基于什么需求提出来要做的?整个项目难点是什么?](#介绍一下这个项目这个项目有多少人参加你是什么角色背景是什么基于什么需求提出来要做的整个项目难点是什么)
@@ -23,6 +29,7 @@
     - [训练优化你到底做的哪方面的一些工作](#训练优化你到底做的哪方面的一些工作)
     - [微调模型占用大小具体](#微调模型占用大小具体)
     - [微调的数据处理细节，包括数据采集和挑战？](#微调的数据处理细节包括数据采集和挑战)
+    - [微调数据怎么做的细讲一下](#微调数据怎么做的细讲一下)
     - [QLoRA与LoRA的区别、效果对比及选择依据？](#qlora与lora的区别效果对比及选择依据)
     - [模型量化原理及具体量化方式？](#模型量化原理及具体量化方式)
     - [Deepspeed微调细节，例如Zero阶段？](#deepspeed微调细节例如zero阶段)
@@ -31,7 +38,7 @@
     - [微调的时候r=8,或者16有什么区别?你是怎么确定用哪个的?](#微调的时候r8或者16有什么区别你是怎么确定用哪个的)
     - [微调llm模型,过拟合的信号有哪些?采取怎么策略缓解](#微调llm模型过拟合的信号有哪些采取怎么策略缓解)
     - [微调框架怎么选的,有什么指标依据吗?](#微调框架怎么选的有什么指标依据吗)
-    - [模型微调的时候数据格式](#模型微调的时候数据格式)
+    - [模型微调的时候数据格式 多轮对话input\_id,mask,label长什么样](#模型微调的时候数据格式-多轮对话input_idmasklabel长什么样)
     - [要有多少有效数据](#要有多少有效数据)
 - [知识库RAG相关](#知识库rag相关)
     - [知识库是基于一些自研的这个框架来做的吗?知识库框架里面这个搜索算法简单介绍一下呢](#知识库是基于一些自研的这个框架来做的吗知识库框架里面这个搜索算法简单介绍一下呢)
@@ -45,6 +52,10 @@
     - [知识库搭建的难点是什么?就最大的障碍是什么?](#知识库搭建的难点是什么就最大的障碍是什么)
     - [rag中,如何提高准确率?](#rag中如何提高准确率)
     - [rerank和向量模型用的什么?](#rerank和向量模型用的什么)
+    - [分块策略是什么?](#分块策略是什么)
+    - [spicy切分句子的原理是什么](#spicy切分句子的原理是什么)
+    - [jiba分词有什么现在替换呢](#jiba分词有什么现在替换呢)
+    - [分词word2vec是怎么发展的? 分词的原理是什么?](#分词word2vec是怎么发展的-分词的原理是什么)
 - [视觉模型微调相关](#视觉模型微调相关)
     - [介绍一下这个项目,这个项目有多少人参加,你是什么角色?背景是什么?基于什么需求提出来要做的?整个项目难点是什么?](#介绍一下这个项目这个项目有多少人参加你是什么角色背景是什么基于什么需求提出来要做的整个项目难点是什么-1)
     - [微调结果如何评判？如何评价效果好坏？](#微调结果如何评判如何评价效果好坏-1)
@@ -54,6 +65,7 @@
     - [微调的时候r=8,或者16有什么区别?你是怎么确定用哪个的?](#微调的时候r8或者16有什么区别你是怎么确定用哪个的-1)
     - [过拟合的信号有哪些?怎么处理的?](#过拟合的信号有哪些怎么处理的)
 - [Agent相关](#agent相关)
+    - [Agent到底怎么做?](#agent到底怎么做)
     - [项目中agent定量评价?有没有现成的框架,给出代码或者方法](#项目中agent定量评价有没有现成的框架给出代码或者方法)
     - [项目中agent怎么做的?](#项目中agent怎么做的)
     - [Agent客服长期记忆怎么做?](#agent客服长期记忆怎么做)
@@ -115,6 +127,11 @@ $$
 >核心就是注意力矩阵
 * **Query 和 Key 的作用：** $Q$ 和 $K$ 的点积 $Q \cdot K$ 是用来衡量**语义相关性**和**相对位置**的。
 * **Value 的作用：** $V$ 向量则承载着**实际的语义内容**。它不直接参与注意力分数的计算，而是作为“信息源”被加权求和。
+
+#### 强化学习 PPO 的代码优化器讲一下
+
+#### PPO再结合一下R1的这个GRPO,你可以讲一下它们
+
 
 #### 强化学习 PPO 与 GRPO 算法介绍,有哪些指标之类的?
 
@@ -274,8 +291,111 @@ class PPOAgent:
         self.memory.push(state, action, reward, next_state, done, log_prob)
 ```
 
-#### COT阶段是怎么训练的?
+#### 贝尔曼公式 强化学习策略评估 方法
 
+#### CoT (Chain-of-Thought) 推理策略 是怎么训练获得的? 
+
+CoT能力通常通过监督微调（SFT）和强化学习（RLHF）结合高质量的CoT数据集进行训练，数据包含问题和逐步推理的答案。
+
+```json
+[
+  {
+    "instruction": "水果店里有25箱苹果，每箱重15公斤。卡车司机第一天运走了8箱，第二天运走了10箱。请问水果店里还剩下多少公斤的苹果？",
+    "output": "【思考过程】\n第一步：计算苹果的总重量。总共有25箱，每箱15公斤，所以总重量是 25 * 15 公斤。\n第二步：计算总共运走了多少箱苹果。第一天运走8箱，第二天运走10箱，总共运走了 8 + 10 = 18 箱。\n第三步：计算剩下的苹果有多少箱。总共有25箱，运走了18箱，所以剩下 25 - 18 = 7 箱。\n第四步：计算剩下的苹果的重量。剩下7箱，每箱15公斤，所以剩下的重量是 7 * 15 公斤。\n第五步：进行最终计算。25 * 15 = 375公斤。7 * 15 = 105公斤。\n\n【最终答案】\n水果店里还剩下105公斤的苹果。"
+  },
+  {
+    "instruction": "小明每周存10元钱，他想买一个价值75元的玩具。他已经存了4周了，请问他还需要存几周才能买到玩具？",
+    "output": "【思考过程】\n第一步：计算小明已经存了多少钱。他每周存10元，已经存了4周，所以已经存了 10 * 4 = 40 元。\n第二步：计算还需要存多少钱。玩具价值75元，他已经有40元，所以还需要 75 - 40 = 35 元。\n第三步：计算还需要存几周。他每周存10元，还需要35元，所以还需要 35 / 10 = 3.5 周。\n第四步：根据问题调整答案。因为存钱是按周计算的，存3周不够，所以必须存4周才能凑够钱。\n\n【最终答案】\n他还需要存4周才能买到玩具。"
+  }
+]
+```
+
+```python
+import torch
+from datasets import load_dataset
+from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, BitsAndBytesConfig
+from trl import SFTTrainer
+from peft import LoraConfig
+
+# 1. 设置模型和分词器
+model_id = "qwen/Qwen2-7B-Instruct"
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+# 为了在单张GPU上运行，我们使用量化加载模型
+quantization_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_compute_dtype=torch.bfloat16
+)
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    quantization_config=quantization_config,
+    device_map="auto" # 自动分配到GPU
+)
+
+# 2. 加载并格式化我们的CoT数据集
+# 假设 cot_math_dataset.json 在当前目录
+dataset = load_dataset("json", data_files="cot_math_dataset.json", split="train")
+
+# 定义一个格式化函数，将我们的JSON数据转换成模型喜欢的格式
+# 模型需要学习从 "指令" -> "输出" 的映射
+def formatting_prompts_func(example):
+    # 对于指令模型，通常需要遵循特定的模板
+    # Qwen2的模板是 <|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n{instruction}<|im_end|>\n<|im_start|>assistant\n{output}<|im_end|>
+    # SFTTrainer 会自动处理指令和响应，我们只需要提供文本列
+    text = f"<|im_start|>user\n{example['instruction']}<|im_end|>\n<|im_start|>assistant\n{example['output']}<|im_end|>"
+    return { "text": text }
+
+formatted_dataset = dataset.map(formatting_prompts_func)
+
+
+# 3. 设置PEFT (LoRA) 配置
+# 这是参数高效微调的关键，我们只训练一小部分参数
+peft_config = LoraConfig(
+    r=16, # LoRA rank
+    lora_alpha=32,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj"], # 针对Attention层
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM",
+)
+
+
+# 4. 设置训练参数
+training_args = TrainingArguments(
+    output_dir="./cot-finetuned-model",      # 模型输出目录
+    per_device_train_batch_size=1,           # 每张卡的批大小
+    gradient_accumulation_steps=4,           # 梯度累积
+    learning_rate=2e-4,                      # 学习率
+    logging_steps=10,                        # 每10步打印一次日志
+    num_train_epochs=1,                      # 训练轮次
+    max_steps=-1,                            # 如果设置了，会覆盖num_train_epochs
+    report_to="none",                        # 不上报到wandb等平台
+)
+
+# 5. 初始化并开始训练
+trainer = SFTTrainer(
+    model=model,
+    args=training_args,
+    train_dataset=formatted_dataset,
+    peft_config=peft_config,                  # 传入LoRA配置
+    dataset_text_field="text",                # 指定包含完整文本的列
+    max_seq_length=1024,                      # 设置最大序列长度
+    tokenizer=tokenizer,
+)
+
+print("开始CoT微调...")
+trainer.train()
+print("训练完成！")
+
+# 保存训练好的LoRA适配器
+trainer.save_model("./cot-finetuned-model/final_checkpoint")
+```
+
+
+#### 继续训练有哪些主要的阶段?每个阶段是的作用是什么?并且是怎么样训练的? 
+
+模型出厂: 基础预训练-->instrut微调-->RLHF
+
+继续训练的目标更聚焦，方法也更灵活高效 主要分为两大阶段：持续预训练 和 领域/任务微调。
 
 
 #### ROPE现在是怎么做的,详细解释一下.有哪些优化的方法?
@@ -399,6 +519,149 @@ l1,l2正则,k折
     - Dropout：随机丢弃神经元，增强模型鲁棒性。
     - 权重衰减：通过优化器（如AdamW）实现正则化。
 
+#### 全量微调怎么做?
+
+```json
+{"instruction": "将以下句子翻译成英文。", "input": "我爱北京天安门。", "output": "I love Tiananmen Square in Beijing."}
+{"instruction": "解释什么是人工智能。", "input": "", "output": "人工智能（Artificial Intelligence），英文缩写为AI。它是研究、开发用于模拟、延伸和扩展人的智能的理论、方法、技术及应用系统的一门新的技术科学。"}
+{"instruction": "写一首关于夏天的短诗。", "input": "", "output": "绿树浓荫夏日长，楼台倒影入池塘。水晶帘动微风起，满架蔷薇一院香。"}
+{"instruction": "将以下内容进行总结。", "input": "大型语言模型（LLM）是经过大量文本数据训练的深度学习模型。它们能够理解和生成人类语言，可用于翻译、摘要、问答等多种任务。微调是让这些通用模型适应特定任务的重要技术。", "output": "大型语言模型（LLM）是强大的语言处理工具，通过微调可以使其在特定任务上表现更佳。"}
+```
+
+```python
+import os
+import json
+from dataclasses import dataclass, field
+from typing import Optional
+
+import torch
+from datasets import load_dataset
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    HfArgumentParser,
+    TrainingArguments,
+    Trainer,
+)
+
+# --- 定义命令行参数 ---
+@dataclass
+class ModelArguments:
+    model_name_or_path: str = field(
+        default="distilgpt2",
+        metadata={"help": "预训练模型的路径或Hugging Face Hub上的模型名称。"}
+    )
+
+@dataclass
+class DataArguments:
+    data_path: str = field(
+        default="sft_data.jsonl",
+        metadata={"help": "训练数据文件的路径。"}
+    )
+
+@dataclass
+class CustomTrainingArguments(TrainingArguments):
+    output_dir: str = field(
+        default="./finetuned_model",
+        metadata={"help": "微调后模型的保存路径。"}
+    )
+    num_train_epochs: int = field(default=3, metadata={"help": "训练的总轮次。"})
+    per_device_train_batch_size: int = field(default=4, metadata={"help": "每个设备上的训练批次大小。"})
+    gradient_accumulation_steps: int = field(default=1, metadata={"help": "梯度累积步数。"})
+    learning_rate: float = field(default=2e-5, metadata={"help": "学习率。"})
+    logging_steps: int = field(default=10, metadata={"help": "每隔多少步记录一次日志。"})
+    save_steps: int = field(default=50, metadata={"help": "每隔多少步保存一次模型检查点。"})
+    fp16: bool = field(
+        default=torch.cuda.is_available(),
+        metadata={"help": "是否使用FP16混合精度训练。"}
+    )
+
+def main():
+    # --- 解析命令行参数 ---
+    parser = HfArgumentParser((ModelArguments, DataArguments, CustomTrainingArguments))
+    model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+
+    # --- 加载模型和分词器 ---
+    print(f"Loading model from {model_args.model_name_or_path}...")
+    model = AutoModelForCausalLM.from_pretrained(
+        model_args.model_name_or_path,
+        trust_remote_code=True
+    )
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_args.model_name_or_path,
+        trust_remote_code=True
+    )
+
+    # 如果模型没有pad_token，则设置一个
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
+    # --- 加载和预处理数据 ---
+    print(f"Loading data from {data_args.data_path}...")
+    dataset = load_dataset("json", data_files=data_args.data_path, split="train")
+
+    def format_prompt(example):
+        # 将指令、输入和输出格式化成一个单独的文本
+        if example.get("input"):
+            return f"Instruction: {example['instruction']}\nInput: {example['input']}\nOutput: {example['output']}"
+        else:
+            return f"Instruction: {example['instruction']}\nOutput: {example['output']}"
+
+    def preprocess_function(examples):
+        # 创建完整的prompt文本
+        prompts = [format_prompt(example) for example in examples]
+        # 对文本进行分词
+        model_inputs = tokenizer(prompts, max_length=512, truncation=True, padding="max_length")
+        # 对于Causal LM，labels通常与input_ids相同
+        model_inputs["labels"] = model_inputs["input_ids"]
+        return model_inputs
+
+    print("Preprocessing data...")
+    processed_dataset = dataset.map(
+        preprocess_function,
+        batched=True,
+        remove_columns=dataset.column_names
+    )
+
+    # --- 初始化Trainer ---
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=processed_dataset,
+        tokenizer=tokenizer,
+    )
+
+    # --- 开始训练 ---
+    print("Starting training...")
+    trainer.train()
+
+    # --- 保存最终模型 ---
+    print(f"Saving model to {training_args.output_dir}...")
+    trainer.save_model(training_args.output_dir)
+    tokenizer.save_pretrained(training_args.output_dir)
+
+    print("Training finished!")
+
+if __name__ == "__main__":
+    main()
+```
+
+```shell
+python full_finetune.py \
+    --model_name_or_path distilgpt2 \
+    --data_path sft_data.jsonl \
+    --output_dir ./my_finetuned_model \
+    --num_train_epochs 3 \
+    --per_device_train_batch_size 2 \
+    --learning_rate 5e-5 \
+    --logging_steps 1
+```
+
+在全量微调中，我们不提供任何peft_config。Trainer会默认训练模型的所有参数。
+
+
+
+
 
 ####  cv常用算法
 
@@ -421,6 +684,53 @@ SIFT尺度不变特征变换
 #### kv cache通俗讲解
 
 缓存算过的注意力矩阵
+
+Query（查询，Q）：当前词的表示，用来查询其他词的相关性。
+Key（键，K）：所有词的表示，用来被查询。
+Value（值，V）：所有词的实际内容，注意力分数决定每个词的贡献。
+
+注意力计算的核心是拿当前的 Q 去和所有历史的 K 做匹配（计算相似度），然后根据相似度去加权求和所有历史的 V。
+
+我们缓存的是 K 和 V 本身，而不是它们和 Q 计算后的结果，根本原因在于：在生成每一个新词时，Query (Q) 向量是会变的，而历史的 Key (K) 和 Value (V) 向量是固定不变的。
+
+#### Automatic Prefix Caching解释,怎么实现的
+
+前缀识别(可能包括系统提示、对话历史或固定的模板)==>键值缓存
+
+```python
+# 假设有一个Transformer模型和键值缓存
+class PrefixCachingModel:
+    def __init__(self):
+        self.kv_cache = {}  # 存储前缀的键值对
+        self.prefix_tokens = []  # 存储前缀的token序列
+
+    def process_input(self, input_tokens):
+        # 检测公共前缀
+        common_prefix_length = find_common_prefix(input_tokens, self.prefix_tokens)
+        
+        # 加载缓存的键值对
+        if common_prefix_length > 0:
+            cached_kv = self.kv_cache.get(common_prefix_length, None)
+            if cached_kv:
+                # 使用缓存的键值对初始化注意力计算
+                self.model.set_kv_cache(cached_kv)
+        
+        # 处理新token（前缀之后的部分）
+        new_tokens = input_tokens[common_prefix_length:]
+        output, new_kv = self.model.forward(new_tokens)
+        
+        # 更新缓存
+        self.update_cache(input_tokens, new_kv)
+        
+        return output
+
+    def update_cache(self, input_tokens, new_kv):
+        # 更新前缀和键值缓存
+        self.prefix_tokens = input_tokens
+        self.kv_cache[len(input_tokens)] = new_kv
+```
+
+开源推理框架vLLM实现了高效的键值缓存和前缀缓存机制
 
 #### MOE架构介绍
 
@@ -507,7 +817,7 @@ class MoELayer(nn.Module):
 adapter_model.safetensors主要看r和lora_alpha还有target_modules,都有影响
 
 
-#### 微调的数据处理细节，包括数据采集和挑战？
+#### 微调的数据处理细节，包括数据采集和挑战？ 
 
 ```python
 model_name = "/mnt/data/llch/Qwen2.5-7B-Instruct"
@@ -652,6 +962,10 @@ multi_turn_example_data = {
 print(multi_turn_example_data)
 ```
 
+#### 微调数据怎么做的细讲一下
+
+
+
 
 #### QLoRA与LoRA的区别、效果对比及选择依据？
 
@@ -726,14 +1040,47 @@ total_loss = base_loss + 0.01 * l2_reg_loss
 3. 易用性与灵活性
 4. PEFT 作为目前最主流的参数高效微调库
 
-#### 模型微调的时候数据格式
+#### 模型微调的时候数据格式 多轮对话input_id,mask,label长什么样
 
 input_ids
 attention_mask
 labels
 
 pixel_value
-image_grid_thw
+image_grid_thw ==>假设一张图片被划分成了 2 行 x 3 列 的图像块（patches） 则 image_grid_thw = [1, 2, 3]
+
+```
+ull_sequence_ids = (
+    system_prompt_ids +
+    user_1_ids +
+    assistant_1_ids +
+    user_2_ids +
+    assistant_2_ids
+)
+actual_length = len(full_sequence_ids)
+
+# --- Pad the sequence to MAX_LENGTH ---
+padding_length = MAX_LENGTH - actual_length
+input_ids_with_padding = full_sequence_ids + [pad_token_id] * padding_length
+
+# --- Create attention_mask ---
+# 1 for actual tokens, 0 for padding tokens
+attention_mask = [1] * actual_length + [0] * padding_length
+
+# --- Create labels ---
+# -100 for system prompt, user turns, and previous assistant turns (already "known" context)
+# -100 for padding
+# Actual token IDs for the *current* assistant response we are training on
+labels = (
+    [-100] * len(system_prompt_ids) +    # System prompt part ignored
+    [-100] * len(user_1_ids) +           # User 1 part ignored
+    [-100] * len(assistant_1_ids) +      # Assistant 1 part (previous turn) ignored
+    [-100] * len(user_2_ids) +           # User 2 part ignored
+    assistant_2_ids +                    # <--- ONLY THIS PART IS USED FOR LOSS CALCULATION
+    [-100] * padding_length              # Padding part ignored
+)
+```
+
 
 #### 要有多少有效数据
 
@@ -897,6 +1244,21 @@ MxbaiRerankV2 bge
 ==>
 qwen
 
+#### 分块策略是什么?
+
+
+#### spicy切分句子的原理是什么
+
+#### jiba分词有什么现在替换呢
+
+
+#### 分词word2vec是怎么发展的? 分词的原理是什么?
+
+
+
+
+
+
 ---
 
 ## 视觉模型微调相关
@@ -931,6 +1293,12 @@ qwen
 ---
 
 ## Agent相关
+
+#### Agent到底怎么做?
+
+具体场景需要维护一个具体的上下文类
+然后一个路由控制分发
+对话存储
 
 #### 项目中agent定量评价?有没有现成的框架,给出代码或者方法
 
