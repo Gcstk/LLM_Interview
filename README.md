@@ -108,6 +108,9 @@ FAQ_Of_LLM_Interview/
 - [张老师](https://github.com/zyxcambridge)(提供了此库的最开始的思路,没有他就没有此库)
 - [赵老师](https://未提供链接,hh.com)(无偿回答了很多问题)
 - [Kesoft](https://github.com/Kesoft)(添加了pr)
+- [胜算云AI团队](https://www.shengsuanyun.com/?from=CH_GRT40E7E)(胜算云模型API服务)
+>**胜算云AI开发者扶持计划**：胜算云平台聚合了全球主流大模型 API（Claude、Gemini、GPT-4 等），目前已有超过 8 万开发者使用，由“长三角国家技术创新中心”的国家基金专项扶持，解决国内开发者在科研/项目中使用海外模型难、成本高的问题。平台与亚马逊云、微软azure、Google云（GCP）三大巨头官方合作，高折扣，非逆向，支付宝/微信、可发票，实名/邀请好友享更多代金券，点击此处进行注册：[渠道链接](https://www.shengsuanyun.com/?from=CH_GRT40E7E)
+![](using_files/img/z_ads/390a15b3f8dbcda1449e3365da3384f.png)
 
 ### 吐槽
 
